@@ -1,10 +1,10 @@
 'use strict';
 
-var COUNT_DESCRIPTION = 25;
+var COUNT_PICTURES = 25;
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
-var names = ['Артем', 'Лена', 'Игорь', 'Саша', 'Сергей'];
+var names = ['Артем', 'Лена', 'Игорь', 'Саша', 'Сергей', 'Кекс'];
 
-var getCommentDescription = function (indexes, object) {
+var getCommentPicture = function (indexes, object) {
   var comment = '';
   if (indexes.length > 1) {
     comment = comments[indexes[0]] + ' ' + comments[indexes[1]];
@@ -14,28 +14,27 @@ var getCommentDescription = function (indexes, object) {
   object.comments = comment;
   return object;
 };
-var getDescriptions = function (countDescription) {
-  var descriptions = [];
-  for (var i = 0; i < countDescription; i++) {
-    var description = getDescriptionPicture(getCommentDescription(getRandomIndexes(comments.length), getDescriptionPictureObject()), i);
-    descriptions[i] = description;
+var getPictures = function (countPictures) {
+  var pictures = [];
+  for (var i = 0; i < countPictures; i++) {
+    var picture = getTemplatePicture(getCommentPicture(getRandomIndexes(comments.length), getPictureObject()), i);
+    pictures[i] = picture;
   }
-  return descriptions;
+  return pictures;
 };
-var getDescriptionPicture = function (object, index) {
+var getTemplatePicture = function (object, index) {
   var str = object.url;
   object.url = str.replace('{{i}}', index);
   return object;
 };
-var getDescriptionPictureObject = function () {
-  var description = {
+var getPictureObject = function () {
+  var pictureObject = {
     'url': 'photos/{{i}}.jpg',
-    'description': 'description',
+    'description': {'avatar': 'avatar1', 'message': 'message1', 'name': getRandomName(names)},
     'likes': getRandomLikes(),
-    'comments': 'comment',
-    'name': getRandomName(names)
+    'comments': 'comment'
   };
-  return description;
+  return pictureObject;
 };
 var getRandomIndexes = function (length) {
   var indexes = [];
@@ -57,7 +56,7 @@ var getRandomName = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
 
-// for (var i = 0; i < getDescriptions(COUNT_DESCRIPTION).length; i++) {
-//   console.log(getDescriptions(COUNT_DESCRIPTION)[i]);
+// for (var i = 0; i < getPictures(COUNT_PICTURES).length; i++) {
+//   console.log(getPictures(COUNT_PICTURES)[i]);
 // }
-getDescriptions(COUNT_DESCRIPTION);
+getPictures(COUNT_PICTURES);
