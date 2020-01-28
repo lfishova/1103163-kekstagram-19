@@ -2,6 +2,7 @@
 
 var COUNT_DESCRIPTION = 25;
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
+var names = ['Артем', 'Лена', 'Игорь', 'Саша', 'Сергей'];
 
 var getCommentDescription = function (indexes, object) {
   var comment = '';
@@ -31,7 +32,8 @@ var getDescriptionPictureObject = function () {
     'url': 'photos/{{i}}.jpg',
     'description': 'description',
     'likes': getRandomLikes(),
-    'comments': 'comment'
+    'comments': 'comment',
+    'name': getRandomName(names)
   };
   return description;
 };
@@ -50,6 +52,9 @@ var getRandomIndexes = function (length) {
 };
 var getRandomLikes = function () {
   return Math.floor(Math.random() * 185) + 15;
+};
+var getRandomName = function (arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
 };
 
 // for (var i = 0; i < getDescriptions(COUNT_DESCRIPTION).length; i++) {
