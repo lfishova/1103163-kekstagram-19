@@ -1,6 +1,6 @@
-'use strict'
+'use strict';
 
-var COUNT_DESCRIPTION = 25;
+// var COUNT_DESCRIPTION = 25;
 // var comments = [
 //   {'comment'}
 // ]
@@ -15,7 +15,7 @@ var getDescriptionPictureObject = function () {
     'description': 'description',
     'likes': getRandomLikes(),
     'comments': 'comment'
-  }
+  };
   return description;
 };
 var getRandomLikes = function () {
@@ -26,6 +26,6 @@ for (var i = 0; i < 5; i++) {
   var comment = getDescriptionPicture(getDescriptionPictureObject(), i);
   comments[i] = comment;
 }
-for (var i = 0; i < comments.length; i++) {
-  console.log(comments[i]);
-}
+// for (i = 0; i < comments.length; i++) {
+//   console.log(comments[i]);
+// }
