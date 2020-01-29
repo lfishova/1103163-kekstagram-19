@@ -2,37 +2,38 @@
 
 var COUNT_PICTURES = 25;
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
-var names = ['Артем', 'Лена', 'Игорь', 'Саша', 'Сергей', 'Кекс'];
+var names = ['Артем', 'Лена', 'Игорь', 'Саша', 'Сергей', 'Кекс', 'Коля'];
 
-var getCommentPicture = function (indexes, object) {
+var getCommentPicture = function (indexes) {
   var comment = '';
   if (indexes.length > 1) {
     comment = comments[indexes[0]] + ' ' + comments[indexes[1]];
   } else {
     comment = comments[indexes[0]];
   }
-  object.comments = comment;
-  return object;
+  return comment;
 };
 var getPictures = function (countPictures) {
   var pictures = [];
   for (var i = 0; i < countPictures; i++) {
-    var picture = getTemplatePicture(getCommentPicture(getRandomIndexes(comments.length), getPictureObject()), i);
+    var picture = getPictureObject();
+    picture.url = getTemplateQuality(picture.url, i);
+    picture.comments.avatar = getTemplateQuality(picture.comments.avatar, Math.floor(Math.random() * names.length));
+    picture.comments.massage = getCommentPicture(getRandomIndexes(comments.length));
     pictures[i] = picture;
   }
   return pictures;
 };
-var getTemplatePicture = function (object, index) {
-  var str = object.url;
-  object.url = str.replace('{{i}}', index);
-  return object;
+var getTemplateQuality = function (quality, index) {
+  quality = quality.replace('{{i}}', index);
+  return quality;
 };
 var getPictureObject = function () {
   var pictureObject = {
     'url': 'photos/{{i}}.jpg',
-    'description': {'avatar': 'avatar1', 'message': 'message1', 'name': getRandomName(names)},
+    'description': 'description picture',
     'likes': getRandomLikes(),
-    'comments': 'comment'
+    'comments': {'avatar': 'img/avatar-{{i}}.svg', 'massage': 'messages', 'name': getRandomName(names)}
   };
   return pictureObject;
 };
