@@ -25,6 +25,7 @@ var getPictures = function (countPictures) {
   return pictures;
 };
 var getTemplateQuality = function (quality, index) {
+  index++;
   quality = quality.replace('{{i}}', index);
   return quality;
 };
@@ -56,8 +57,30 @@ var getRandomLikes = function () {
 var getRandomName = function (arr) {
   return arr[Math.floor(Math.random() * arr.length)];
 };
-
+var getBlockPicture = function () {
+  return document.querySelector('.pictures');
+};
+var getTemplatePicture = function () {
+  return document.querySelector('#picture').content.querySelector('.picture');
+};
+var getPicture = function (picture) {
+  var pictureElement = getTemplatePicture().cloneNode(true);
+  pictureElement.querySelector('.picture__img').src = picture.url;
+  pictureElement.querySelector('.picture__likes').textContent = picture.likes;
+  return pictureElement;
+};
+var renderPictures = function () {
+  var blockPictures = getBlockPicture();
+  var pictures = getPictures(COUNT_PICTURES);
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < pictures.length; i++) {
+    fragment.appendChild(getPicture(pictures[i]));
+  }
+  blockPictures.appendChild(fragment);
+};
 // for (var i = 0; i < getPictures(COUNT_PICTURES).length; i++) {
 //   console.log(getPictures(COUNT_PICTURES)[i]);
 // }
-getPictures(COUNT_PICTURES);
+// var pictures = getPictures(COUNT_PICTURES);
+// console.log(getPicture(pictures[0]));
+renderPictures();
