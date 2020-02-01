@@ -1,15 +1,19 @@
 'use strict';
 
-var COUNT_PICTURES = 25;
-var MIN_LIKES_VALUE = 15;
-var MAX_LIKES_VALUE = 200;
-var MIN_COMMENT_VALUE = 25;
-var MAX_COMMENT_VALUE = 125;
+const COUNT_PICTURES = 25;
+const LIKES = {
+  MIN: 15,
+  MAX: 200
+};
+const COMMENT = {
+  MIN: 25,
+  MAX: 125
+};
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var names = ['Артем', 'Лена', 'Игорь', 'Саша', 'Сергей', 'Кекс'];
 
 var getCommentaries = function () {
-  var randomComments = getRandomInt(MIN_COMMENT_VALUE, MAX_COMMENT_VALUE);
+  var randomComments = getRandomInt(COMMENT.MIN, COMMENT.MAX);
   var commentaries = [];
   for (var i = 0; i < randomComments; i++) {
     var index = getRandomInt(0, names.length);
@@ -46,7 +50,7 @@ var getPictureTemplate = function (index) {
   var picture = {
     'url': 'photos/' + index + '.jpg',
     'description': 'description picture',
-    'likes': getRandomInt(MIN_LIKES_VALUE, MAX_LIKES_VALUE),
+    'likes': getRandomInt(LIKES.MIN, LIKES.MAX),
     'comments': getCommentaries()
   };
   return picture;
