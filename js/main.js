@@ -12,6 +12,9 @@ const COMMENT = {
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var names = ['Артем', 'Лена', 'Игорь', 'Саша', 'Сергей', 'Кекс'];
 var blockPictures = document.querySelector('.pictures');
+var bigPicture = document.querySelector('.big-picture');
+var imgBigPicture = bigPicture.querySelector('.big-picture__img');
+var blockComments = bigPicture.querySelector('.social__comments');
 
 var getCommentaries = function () {
   var randomComments = getRandomInt(COMMENT.MIN, COMMENT.MAX);
@@ -86,6 +89,49 @@ var renderPictures = function (countPictures) {
   }
   blockPictures.appendChild(fragment);
 };
+var renderAlonePicture = function () {
+  var urlBigPicture = imgBigPicture.querySelector('img');
+  var picture = getPictures(1)[0];
+  urlBigPicture.src = picture.url;
+  bigPicture.querySelector('.likes-count').textContent = picture.likes;
+  bigPicture.querySelector('.comments-count').textContent = picture.comments.length.toString();
+  bigPicture.querySelector('.social__caption').textContent = picture.description;
+  renderCommentsAlonePicture(picture.comments);
+};
+var renderCommentsAlonePicture = function (arr) {
+  var fragment = document.createDocumentFragment();
+  for (var i = 0; i < arr.length; i++) {
+    fragment.appendChild(getCommentElement(arr[i]));
+  }
+  blockComments.appendChild(fragment);
+};
+var showBigPicture = function () {
+  bigPicture.classList.remove('hidden');
+};
+var getCommentElement = function (comment) {
+  var fragment = document.createElement('li');
+  var imgNewElement = document.createElement('img');
+  var pNewElement = document.createElement('p');
+  imgNewElement.className = 'social__picture';
+  imgNewElement.src = comment.avatar;
+  imgNewElement.alt = comment.name;
+  imgNewElement.width = '35';
+  imgNewElement.height = '35';
+  pNewElement.className = 'social__text';
+  pNewElement.textContent = comment.message;
+  fragment.appendChild(imgNewElement);
+  fragment.appendChild(pNewElement);
+  return fragment;
+};
+var addClass = function () {
+  document.querySelector('.social__comment-count').classList.add('hidden');
+  document.querySelector('.comments-loader').classList.add('hidden');
+  document.querySelector('body').classList.add('modal-open');
+};
 
 renderPictures(COUNT_PICTURES);
+renderAlonePicture();
+showBigPicture();
+addClass();
+
 
