@@ -91,7 +91,7 @@ var renderPictures = function (countPictures) {
 };
 var renderAlonePicture = function () {
   var urlBigPicture = imgBigPicture.querySelector('img');
-  var picture = getPictures(1)[0];
+  var picture = getPictures(COUNT_PICTURES)[0];
   urlBigPicture.src = picture.url;
   bigPicture.querySelector('.likes-count').textContent = picture.likes;
   bigPicture.querySelector('.comments-count').textContent = picture.comments.length.toString();
