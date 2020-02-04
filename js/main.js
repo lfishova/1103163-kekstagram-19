@@ -90,9 +90,8 @@ var renderPictures = function (countPictures) {
   blockPictures.appendChild(fragment);
 };
 var renderAlonePicture = function () {
-  var urlBigPicture = imgBigPicture.querySelector('img');
   var picture = getPictures(COUNT_PICTURES)[0];
-  urlBigPicture.src = picture.url;
+  imgBigPicture.querySelector('img').src = picture.url;
   bigPicture.querySelector('.likes-count').textContent = picture.likes;
   bigPicture.querySelector('.comments-count').textContent = picture.comments.length.toString();
   bigPicture.querySelector('.social__caption').textContent = picture.description;
