@@ -89,15 +89,14 @@ var renderPictures = function (countPictures) {
   }
   blockPictures.appendChild(fragment);
 };
-var renderAlonePicture = function () {
-  var picture = getPictures(COUNT_PICTURES)[0];
+var renderOnePicture = function (picture) {
   imgBigPicture.querySelector('img').src = picture.url;
   bigPicture.querySelector('.likes-count').textContent = picture.likes;
   bigPicture.querySelector('.comments-count').textContent = picture.comments.length.toString();
   bigPicture.querySelector('.social__caption').textContent = picture.description;
-  renderCommentsAlonePicture(picture.comments);
+  renderCommentsOnePicture(picture.comments);
 };
-var renderCommentsAlonePicture = function (arr) {
+var renderCommentsOnePicture = function (arr) {
   var fragment = document.createDocumentFragment();
   for (var i = 0; i < arr.length; i++) {
     fragment.appendChild(getCommentElement(arr[i]));
@@ -110,18 +109,24 @@ var showBigPicture = function () {
 var getCommentElement = function (comment) {
   var fragment = document.createElement('li');
   fragment.className = 'social__comment';
-  var imgNewElement = document.createElement('img');
-  var pNewElement = document.createElement('p');
-  imgNewElement.className = 'social__picture';
-  imgNewElement.src = comment.avatar;
-  imgNewElement.alt = comment.name;
-  imgNewElement.width = '35';
-  imgNewElement.height = '35';
-  pNewElement.className = 'social__text';
-  pNewElement.textContent = comment.message;
-  fragment.appendChild(imgNewElement);
-  fragment.appendChild(pNewElement);
+  fragment.appendChild(fillAttributeImage(comment));
+  fragment.appendChild(fillAttributeParagraph(comment));
   return fragment;
+};
+var fillAttributeImage = function (comment) {
+  var imageElement = document.createElement('img');
+  imageElement.className = 'social__picture';
+  imageElement.src = comment.avatar;
+  imageElement.alt = comment.name;
+  imageElement.width = '35';
+  imageElement.height = '35';
+  return imageElement;
+};
+var fillAttributeParagraph = function (comment) {
+  var paragraphElement = document.createElement('p');
+  paragraphElement.className = 'social__text';
+  paragraphElement.textContent = comment.message;
+  return paragraphElement;
 };
 var addClass = function () {
   document.querySelector('.social__comment-count').classList.add('hidden');
@@ -130,7 +135,7 @@ var addClass = function () {
 };
 
 renderPictures(COUNT_PICTURES);
-renderAlonePicture();
+renderOnePicture(getPictures(COUNT_PICTURES)[0]);
 showBigPicture();
 addClass();
 
