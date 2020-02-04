@@ -109,6 +109,7 @@ var showBigPicture = function () {
 };
 var getCommentElement = function (comment) {
   var fragment = document.createElement('li');
+  fragment.className = 'social__comment';
   var imgNewElement = document.createElement('img');
   var pNewElement = document.createElement('p');
   imgNewElement.className = 'social__picture';
