@@ -60,13 +60,12 @@ var getPictureTemplate = function (index) {
   return picture;
 };
 var getRandomIndexes = function (length) {
-  var indexes = [0, 0];
+  var indexes = [];
   indexes[0] = getRandomInt(0, length);
   if (getRandomInt(0, 2)) {
-    indexes[1] = getRandomInt(0, length);
-    while (indexes[1] === indexes[0]) {
+    do {
       indexes[1] = getRandomInt(0, length);
-    }
+    } while (indexes[1] === indexes[0]);
   }
   return indexes;
 };
