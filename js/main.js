@@ -1,6 +1,7 @@
 'use strict';
 
 const COUNT_PICTURES = 25;
+var ESC_KEY = 'Escape';
 const LIKES = {
   MIN: 15,
   MAX: 200
@@ -15,6 +16,11 @@ var blockPictures = document.querySelector('.pictures');
 var bigPicture = document.querySelector('.big-picture');
 var imgBigPicture = bigPicture.querySelector('.big-picture__img');
 var blockComments = bigPicture.querySelector('.social__comments');
+var uploadFile = document.querySelector('#upload-file');
+var uploadCancel = document.querySelector('#upload-cancel');
+var scale = document.querySelector('.scale');
+var effect = document.querySelector('.effects');
+var imgPreview = document.querySelector('.img-upload__preview').querySelector('img');
 
 var getCommentaries = function () {
   var randomComments = getRandomInt(COMMENT.MIN, COMMENT.MAX);
@@ -102,9 +108,9 @@ var renderCommentsOnePicture = function (arr) {
   }
   blockComments.appendChild(fragment);
 };
-var showBigPicture = function () {
-  bigPicture.classList.remove('hidden');
-};
+// var showBigPicture = function () {
+//   bigPicture.classList.remove('hidden');
+// };
 var getCommentElement = function (comment) {
   var fragment = document.createElement('li');
   fragment.className = 'social__comment';
@@ -132,10 +138,96 @@ var addClass = function () {
   document.querySelector('.comments-loader').classList.add('hidden');
   document.querySelector('body').classList.add('modal-open');
 };
+var showEditForm = function () {
+  uploadFile.addEventListener('change', function () {
+    document.querySelector('.img-upload__overlay').classList.remove('hidden');
+  });
+  document.addEventListener('keydown', function (evt) {
+    onModalEscPress(evt, uploadFile);
+  });
+};
+var closeEditForm = function () {
+  uploadCancel.addEventListener('click', function () {
+    closeModal();
+  });
+};
+var closeModal = function () {
+  document.querySelector('.img-upload__overlay').classList.add('hidden');
+  document.querySelector('body').classList.remove('modal-open');
+  document.removeEventListener('keydown', function (evt) {
+    onModalEscPress(evt, uploadFile);
+  });
+};
+var onModalEscPress = function (evt, element) {
+  if (evt.key === ESC_KEY) {
+    closeModal();
+    clearValue(element);
+  }
+};
+var clearValue = function (element) {
+  element.value = '';
+};
+var setScaleValue = function (setValue) {
+  scale.querySelector('.scale__control--value').value = setValue + '%';
+  document.querySelector('.img-upload__preview').querySelector('img').style.transform = 'scale(' + setValue * 0.01 + ')';
+};
+var getScaleValue = function () {
+  return scale.querySelector('.scale__control--value').value;
+};
+var onScaleControlSmallerClick = function () {
+  var smallNumber = parseInt(getScaleValue().replace('%', ''), 10);
+  scale.querySelector('.scale__control--bigger').disabled = false;
+  smallNumber -= 25;
+  if (smallNumber === 0) {
+    scale.querySelector('.scale__control--smaller').disabled = true;
+  } else {
+    setScaleValue(smallNumber);
+  }
+};
+var onScaleControlBiggerClick = function () {
+  var bigNumber = parseInt(getScaleValue().replace('%', ''), 10);
+  scale.querySelector('.scale__control--smaller').disabled = false;
+  bigNumber += 25;
+  if (bigNumber === 125) {
+    scale.querySelector('.scale__control--bigger').disabled = true;
+  } else {
+    setScaleValue(bigNumber);
+  }
+};
+var stepScaleDown = function () {
+  scale.querySelector('.scale__control--smaller').addEventListener('click', function () {
+    onScaleControlSmallerClick();
+  });
+};
+var stepScaleUp = function () {
+  scale.querySelector('.scale__control--bigger').addEventListener('click', function () {
+    onScaleControlBiggerClick();
+  });
+};
+var onFilterChange = function (evt) {
+  imgPreview.classList.remove(imgPreview.classList.value);
+  if (evt.target && evt.target.matches('input[type="radio"]')) {
+    imgPreview.classList.add('effects__preview--' + evt.target.value);
+  }
+};
+var checkFilter = function () {
+  effect.addEventListener('change', function (evt) {
+    onFilterChange(evt);
+  });
+};
+var startFilter = function () {
+  imgPreview.classList.add('.effects__preview--none');
+};
 
+
+setScaleValue(100);
 renderPictures(COUNT_PICTURES);
 renderOnePicture(getPictures(COUNT_PICTURES)[0]);
-showBigPicture();
+// showBigPicture();
+stepScaleUp();
+stepScaleDown();
+showEditForm();
+closeEditForm();
 addClass();
-
-
+checkFilter();
+startFilter();
