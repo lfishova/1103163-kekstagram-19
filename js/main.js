@@ -10,6 +10,10 @@ const COMMENT = {
   MIN: 25,
   MAX: 125
 };
+const HASHTAG = {
+  MAX_LENGTH: 20,
+  MAX_COUNT: 5
+};
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var names = ['Артем', 'Лена', 'Игорь', 'Саша', 'Сергей', 'Кекс'];
 var blockPictures = document.querySelector('.pictures');
@@ -21,6 +25,7 @@ var uploadCancel = document.querySelector('#upload-cancel');
 var scale = document.querySelector('.scale');
 var effect = document.querySelector('.effects');
 var imgPreview = document.querySelector('.img-upload__preview').querySelector('img');
+var pictureCancel = document.querySelector('#picture-cancel');
 
 var getCommentaries = function () {
   var randomComments = getRandomInt(COMMENT.MIN, COMMENT.MAX);
@@ -108,9 +113,14 @@ var renderCommentsOnePicture = function (arr) {
   }
   blockComments.appendChild(fragment);
 };
-// var showBigPicture = function () {
-//   bigPicture.classList.remove('hidden');
-// };
+var showBigPicture = function () {
+  bigPicture.classList.remove('hidden');
+};
+var closeBigPicture = function () {
+  pictureCancel.addEventListener('click', function () {
+    bigPicture.classList.add('hidden');
+  });
+};
 var getCommentElement = function (comment) {
   var fragment = document.createElement('li');
   fragment.className = 'social__comment';
@@ -159,7 +169,9 @@ var closeModal = function () {
   });
 };
 var onModalEscPress = function (evt, element) {
-  if (evt.key === ESC_KEY) {
+  if ((evt.target.className === 'text__hashtags' || evt.target.className === 'text__description') ? 1 : 0) {
+    evt.stopPropagation();
+  } else if (evt.key === ESC_KEY) {
     closeModal();
     clearValue(element);
   }
@@ -218,12 +230,42 @@ var checkFilter = function () {
 var startFilter = function () {
   imgPreview.classList.add('.effects__preview--none');
 };
+var textHashtags = document.querySelector('.text__hashtags');
+var checkForm = function () {
+  document.querySelector('#upload-submit').addEventListener('click', function () {
+    var hashtags = textHashtags.value.trim().split(' ');
+    var num = checkOneHaskTag(hashtags);
+    if ((hashtags[0] !== '') && (num !== -1)) {
+      textHashtags.setCustomValidity(hashtagMessages[num]);
+    } else {
+      textHashtags.setCustomValidity('');
+    }
+  });
+};
+var hashtagMessages = ['Хештег начинается с символа #', 'Количество тегов не должно превышать 5'];
+var checkCountHashtags = function (arr) {
+  return arr.length > HASHTAG.MAX_COUNT ? 1 : -1;
+};
+var checkOneHaskTag = function (arr) {
+  var num = checkCountHashtags(arr);
+  if (num === -1) {
+    for (var i = 0; i < arr.length; i++) {
+      var str = arr[i];
+      if (str[0] !== '#') {
+        num = 0;
+        break;
+      }
+    }
+  }
+  return num;
+};
 
-
+closeBigPicture();
+checkForm();
 setScaleValue(100);
 renderPictures(COUNT_PICTURES);
 renderOnePicture(getPictures(COUNT_PICTURES)[0]);
-// showBigPicture();
+showBigPicture();
 stepScaleUp();
 stepScaleDown();
 showEditForm();
