@@ -234,6 +234,7 @@ var textHashtags = document.querySelector('.text__hashtags');
 var checkForm = function () {
   document.querySelector('#upload-submit').addEventListener('click', function () {
     var hashtags = textHashtags.value.trim().split(' ');
+    hashtags = getLowerLetter(hashtags);
     var num = checkOneHaskTag(hashtags);
     if ((hashtags[0] !== '') && (num !== -1)) {
       textHashtags.setCustomValidity(hashtagMessages[num]);
@@ -242,7 +243,7 @@ var checkForm = function () {
     }
   });
 };
-var hashtagMessages = ['Хештег начинается с символа #', 'Количество тегов не должно превышать 5'];
+var hashtagMessages = ['Хештег начинается с символа #', 'Количество тегов не должно превышать 5', 'максимальная длина одного хэш-тега 20 символов, включая решётку', 'хеш-тег не может состоять только из одной решётки', 'один и тот же хэш-тег не может быть использован дважды'];
 var checkCountHashtags = function (arr) {
   return arr.length > HASHTAG.MAX_COUNT ? 1 : -1;
 };
@@ -254,10 +255,35 @@ var checkOneHaskTag = function (arr) {
       if (str[0] !== '#') {
         num = 0;
         break;
+      } else if (str.length > HASHTAG.MAX_LENGTH) {
+        num = 2;
+        break;
+      } else if (str === '#') {
+        num = 3;
+        break;
+      } else {
+        num = uniqueElement(arr);
       }
+
     }
   }
   return num;
+};
+var uniqueElement = function (arr) {
+  var uniques = [];
+  for (var i = 0; i < arr.length; i++) {
+    if (!uniques.includes(arr[i])) {
+      uniques.push(arr[i]);
+    }
+  }
+  return uniques.length === arr.length ? -1 : 4;
+};
+var getLowerLetter = function (arr) {
+  var result = [];
+  for (var i = 0; i < arr.length; i++) {
+    result.push(arr[i].toLowerCase());
+  }
+  return result;
 };
 
 closeBigPicture();
