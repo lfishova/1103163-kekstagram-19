@@ -14,6 +14,15 @@ const HASHTAG = {
   MAX_LENGTH: 20,
   MAX_COUNT: 5
 };
+const MESSAGE = {
+  NONE: -1,
+  BEGIN_HASHTAG: 0,
+  TOO_MORE_COUNT: 1,
+  LETTER_MORE_20: 2,
+  ONLY_HASGTAG: 3,
+  DOUBLE_HASHTAG: 4
+};
+var hashtagMessages = ['Хештег начинается с символа #', 'Количество тегов не должно превышать 5', 'максимальная длина одного хэш-тега 20 символов, включая решётку', 'хеш-тег не может состоять только из одной решётки', 'один и тот же хэш-тег не может быть использован дважды'];
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var names = ['Артем', 'Лена', 'Игорь', 'Саша', 'Сергей', 'Кекс'];
 var blockPictures = document.querySelector('.pictures');
@@ -236,30 +245,30 @@ var checkForm = function () {
     var hashtags = textHashtags.value.trim().split(' ');
     hashtags = getLowerLetter(hashtags);
     var num = checkOneHaskTag(hashtags);
-    if ((hashtags[0] !== '') && (num !== -1)) {
+    if ((hashtags[0] !== '') && (num !== MESSAGE.NONE)) {
       textHashtags.setCustomValidity(hashtagMessages[num]);
     } else {
       textHashtags.setCustomValidity('');
     }
   });
 };
-var hashtagMessages = ['Хештег начинается с символа #', 'Количество тегов не должно превышать 5', 'максимальная длина одного хэш-тега 20 символов, включая решётку', 'хеш-тег не может состоять только из одной решётки', 'один и тот же хэш-тег не может быть использован дважды'];
+
 var checkCountHashtags = function (arr) {
-  return arr.length > HASHTAG.MAX_COUNT ? 1 : -1;
+  return arr.length > HASHTAG.MAX_COUNT ? MESSAGE.TOO_MORE_COUNT : MESSAGE.NONE;
 };
 var checkOneHaskTag = function (arr) {
   var num = checkCountHashtags(arr);
-  if (num === -1) {
+  if (num === MESSAGE.NONE) {
     for (var i = 0; i < arr.length; i++) {
       var str = arr[i];
       if (str[0] !== '#') {
-        num = 0;
+        num = MESSAGE.BEGIN_HASHTAG;
         break;
       } else if (str.length > HASHTAG.MAX_LENGTH) {
-        num = 2;
+        num = MESSAGE.LETTER_MORE_20;
         break;
       } else if (str === '#') {
-        num = 3;
+        num = MESSAGE.ONLY_HASGTAG;
         break;
       } else {
         num = uniqueElement(arr);
@@ -276,7 +285,7 @@ var uniqueElement = function (arr) {
       uniques.push(arr[i]);
     }
   }
-  return uniques.length === arr.length ? -1 : 4;
+  return uniques.length === arr.length ? MESSAGE.NONE : MESSAGE.DOUBLE_HASHTAG;
 };
 var getLowerLetter = function (arr) {
   var result = [];
