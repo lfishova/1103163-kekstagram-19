@@ -28,7 +28,7 @@ const MESSAGE = {
   ONLY_HASGTAG: 3,
   DOUBLE_HASHTAG: 4
 };
-var hashtagMessages = ['Хештег начинается с символа #', 'Количество тегов не должно превышать 5', 'максимальная длина одного хэш-тега 20 символов, включая решётку', 'хеш-тег не может состоять только из одной решётки', 'один и тот же хэш-тег не может быть использован дважды'];
+var hashtagMessages = ['Хештег начинается с символа #', 'Количество тегов не должно превышать 5', 'максимальная длина одного хэш-тега 20 символов, включая решётку', 'хеш-тег не может состоять только из одной решётки', 'один и тот же хэш-тег не может быть использован дважды', 'строка после решётки должна состоять из букв и чисел'];
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var names = ['Артем', 'Лена', 'Игорь', 'Саша', 'Сергей', 'Кекс'];
 var blockPictures = document.querySelector('.pictures');
@@ -42,6 +42,7 @@ var effect = document.querySelector('.effects');
 var imgPreview = document.querySelector('.img-upload__preview').querySelector('img');
 var pictureCancel = document.querySelector('#picture-cancel');
 var textHashtags = document.querySelector('.text__hashtags');
+var regular = /^#[a-zA-Z0-9]+$/;
 
 var getCommentaries = function () {
   var randomComments = getRandomInt(COMMENT.MIN, COMMENT.MAX);
@@ -176,7 +177,7 @@ var onEditFormChange = function () {
 var onEditFormClick = function () {
   uploadCancel.addEventListener('click', function () {
     closeModal();
-    imgPreview.classList.remove(imgPreview.classList.value);
+    removeAllFilter();
     startFilter();
   });
 };
@@ -185,7 +186,7 @@ var closeModal = function () {
   document.querySelector('body').classList.remove('modal-open');
   document.removeEventListener('keydown', function (evt) {
     onModalEscPress(evt, uploadFile);
-    imgPreview.classList.remove(imgPreview.classList.value);
+    removeAllFilter();
     startFilter();
   });
 };
@@ -195,7 +196,7 @@ var onModalEscPress = function (evt, element) {
   } else if (evt.key === ESC_KEY) {
     closeModal();
     clearValue(element);
-    imgPreview.classList.remove(imgPreview.classList.value);
+    removeAllFilter();
     startFilter();
   }
 };
@@ -253,6 +254,9 @@ var checkFilter = function () {
 var startFilter = function () {
   imgPreview.classList.add('.effects__preview--none');
 };
+var removeAllFilter = function () {
+  imgPreview.classList.remove(imgPreview.classList.value);
+};
 var checkForm = function () {
   document.querySelector('#upload-submit').addEventListener('click', function () {
     var hashtags = textHashtags.value.trim().split(' ');
@@ -281,6 +285,9 @@ var checkOneHaskTag = function (arr) {
         break;
       } else if (str === '#') {
         num = MESSAGE.ONLY_HASGTAG;
+        break;
+      } else if (!regular.test(str)) {
+        num = 5;
         break;
       } else {
         num = uniqueElement(arr);
