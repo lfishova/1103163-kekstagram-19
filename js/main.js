@@ -1,7 +1,13 @@
 'use strict';
 
 const COUNT_PICTURES = 25;
-var ESC_KEY = 'Escape';
+const ESC_KEY = 'Escape';
+const STEP = 25;
+const START_SCALE = 100;
+const SCALE = {
+  MAX_SCALE: 100,
+  MIN_SCALE: 25
+};
 const LIKES = {
   MIN: 15,
   MAX: 200
@@ -18,7 +24,7 @@ const MESSAGE = {
   NONE: -1,
   BEGIN_HASHTAG: 0,
   TOO_MORE_COUNT: 1,
-  LETTER_MORE_20: 2,
+  MAX_TAG_LETTER_COUNT: 2,
   ONLY_HASGTAG: 3,
   DOUBLE_HASHTAG: 4
 };
@@ -35,6 +41,7 @@ var scale = document.querySelector('.scale');
 var effect = document.querySelector('.effects');
 var imgPreview = document.querySelector('.img-upload__preview').querySelector('img');
 var pictureCancel = document.querySelector('#picture-cancel');
+var textHashtags = document.querySelector('.text__hashtags');
 
 var getCommentaries = function () {
   var randomComments = getRandomInt(COMMENT.MIN, COMMENT.MAX);
@@ -125,7 +132,7 @@ var renderCommentsOnePicture = function (arr) {
 var showBigPicture = function () {
   bigPicture.classList.remove('hidden');
 };
-var closeBigPicture = function () {
+var onBigPictureClick = function () {
   pictureCancel.addEventListener('click', function () {
     bigPicture.classList.add('hidden');
   });
@@ -157,17 +164,20 @@ var addClass = function () {
   document.querySelector('.comments-loader').classList.add('hidden');
   document.querySelector('body').classList.add('modal-open');
 };
-var showEditForm = function () {
+var onEditFormChange = function () {
   uploadFile.addEventListener('change', function () {
     document.querySelector('.img-upload__overlay').classList.remove('hidden');
+    setScaleValue(START_SCALE);
   });
   document.addEventListener('keydown', function (evt) {
     onModalEscPress(evt, uploadFile);
   });
 };
-var closeEditForm = function () {
+var onEditFormClick = function () {
   uploadCancel.addEventListener('click', function () {
     closeModal();
+    imgPreview.classList.remove(imgPreview.classList.value);
+    startFilter();
   });
 };
 var closeModal = function () {
@@ -175,6 +185,8 @@ var closeModal = function () {
   document.querySelector('body').classList.remove('modal-open');
   document.removeEventListener('keydown', function (evt) {
     onModalEscPress(evt, uploadFile);
+    imgPreview.classList.remove(imgPreview.classList.value);
+    startFilter();
   });
 };
 var onModalEscPress = function (evt, element) {
@@ -183,6 +195,8 @@ var onModalEscPress = function (evt, element) {
   } else if (evt.key === ESC_KEY) {
     closeModal();
     clearValue(element);
+    imgPreview.classList.remove(imgPreview.classList.value);
+    startFilter();
   }
 };
 var clearValue = function (element) {
@@ -198,8 +212,8 @@ var getScaleValue = function () {
 var onScaleControlSmallerClick = function () {
   var smallNumber = parseInt(getScaleValue().replace('%', ''), 10);
   scale.querySelector('.scale__control--bigger').disabled = false;
-  smallNumber -= 25;
-  if (smallNumber === 0) {
+  smallNumber -= STEP;
+  if (smallNumber < SCALE.MIN_SCALE) {
     scale.querySelector('.scale__control--smaller').disabled = true;
   } else {
     setScaleValue(smallNumber);
@@ -208,8 +222,8 @@ var onScaleControlSmallerClick = function () {
 var onScaleControlBiggerClick = function () {
   var bigNumber = parseInt(getScaleValue().replace('%', ''), 10);
   scale.querySelector('.scale__control--smaller').disabled = false;
-  bigNumber += 25;
-  if (bigNumber === 125) {
+  bigNumber += STEP;
+  if (bigNumber > SCALE.MAX_SCALE) {
     scale.querySelector('.scale__control--bigger').disabled = true;
   } else {
     setScaleValue(bigNumber);
@@ -239,7 +253,6 @@ var checkFilter = function () {
 var startFilter = function () {
   imgPreview.classList.add('.effects__preview--none');
 };
-var textHashtags = document.querySelector('.text__hashtags');
 var checkForm = function () {
   document.querySelector('#upload-submit').addEventListener('click', function () {
     var hashtags = textHashtags.value.trim().split(' ');
@@ -252,7 +265,6 @@ var checkForm = function () {
     }
   });
 };
-
 var checkCountHashtags = function (arr) {
   return arr.length > HASHTAG.MAX_COUNT ? MESSAGE.TOO_MORE_COUNT : MESSAGE.NONE;
 };
@@ -265,7 +277,7 @@ var checkOneHaskTag = function (arr) {
         num = MESSAGE.BEGIN_HASHTAG;
         break;
       } else if (str.length > HASHTAG.MAX_LENGTH) {
-        num = MESSAGE.LETTER_MORE_20;
+        num = MESSAGE.MAX_TAG_LETTER_COUNT;
         break;
       } else if (str === '#') {
         num = MESSAGE.ONLY_HASGTAG;
@@ -295,16 +307,15 @@ var getLowerLetter = function (arr) {
   return result;
 };
 
-closeBigPicture();
+onBigPictureClick();
 checkForm();
-setScaleValue(100);
 renderPictures(COUNT_PICTURES);
 renderOnePicture(getPictures(COUNT_PICTURES)[0]);
 showBigPicture();
 stepScaleUp();
 stepScaleDown();
-showEditForm();
-closeEditForm();
+onEditFormChange();
+onEditFormClick();
 addClass();
 checkFilter();
 startFilter();
