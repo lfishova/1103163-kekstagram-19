@@ -1,9 +1,9 @@
 'use strict';
 
 const COUNT_PICTURES = 25;
-const ESC_KEY = 'Escape';
 const STEP = 25;
 const START_SCALE = 100;
+const ESC_KEY = 'Escape';
 const REGULAR = /^#[a-zA-Z0-9]+$/;
 const SCALE = {
   MAX_SCALE: 100,
@@ -29,6 +29,17 @@ const MESSAGE = {
   ONLY_HASGTAG: 3,
   DOUBLE_HASHTAG: 4
 };
+const EFFECT_LIMIT = {
+  MIN: 1,
+  MAX: 3,
+  PERCENT: 100
+};
+const EFFECT_LINE = {
+  MIN_LENGTH: 0,
+  MAX_LENGTH: 453,
+  COLOR: '#ffe753'
+};
+const PERCENT = 100;
 var hashtagMessages = ['Хештег начинается с символа #', 'Количество тегов не должно превышать 5', 'максимальная длина одного хэш-тега 20 символов, включая решётку', 'хеш-тег не может состоять только из одной решётки', 'один и тот же хэш-тег не может быть использован дважды', 'строка после решётки должна состоять из букв и чисел'];
 var comments = ['Всё отлично!', 'В целом всё неплохо. Но не всё.', 'Когда вы делаете фотографию, хорошо бы убирать палец из кадра. В конце концов это просто непрофессионально.', 'Моя бабушка случайно чихнула с фотоаппаратом в руках и у неё получилась фотография лучше.', 'Я поскользнулся на банановой кожуре и уронил фотоаппарат на кота и у меня получилась фотография лучше.', 'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!'];
 var names = ['Артем', 'Лена', 'Игорь', 'Саша', 'Сергей', 'Кекс'];
@@ -257,9 +268,9 @@ var onFilterChange = function (evt) {
       document.querySelector('.effect-level').classList.remove('hidden');
       var value = 100;
       checkEffect(filter, value);
-      effectPin.style.left = 453 + 'px';
+      effectPin.style.left = EFFECT_LINE.MAX_LENGTH + 'px';
       effectDepth.style.width = effectLine.clientWidth + 'px';
-      effectDepth.style.fill = '#ffe753';
+      effectDepth.style.fill = EFFECT_LINE.COLOR;
     } else {
       document.querySelector('.effect-level').classList.add('hidden');
     }
@@ -334,14 +345,15 @@ var getLowerLetter = function (arr) {
   return result;
 };
 var checkEffect = function (effectFilter, value) {
+  document.querySelector('.effect-level__value').value = Math.floor(value);
   if (effectFilter === 'effects__preview--chrome') {
     imgPreview.style.filter = 'grayscale(' + value + '%)';
   } else if (effectFilter === 'effects__preview--marvin') {
     imgPreview.style.filter = 'invert(' + value + '%)';
   } else if (effectFilter === 'effects__preview--phobos') {
-    imgPreview.style.filter = 'blur(' + value * 3 / 100 + 'px)';
+    imgPreview.style.filter = 'blur(' + (EFFECT_LIMIT.MIN + value * (EFFECT_LIMIT.MAX - EFFECT_LIMIT.MIN) / EFFECT_LIMIT.PERCENT) + 'px)';
   } else if (effectFilter === 'effects__preview--heat') {
-    imgPreview.style.filter = 'brightness(' + value * 3 / 100 + ')';
+    imgPreview.style.filter = 'brightness(' + (EFFECT_LIMIT.MIN + value * (EFFECT_LIMIT.MAX - EFFECT_LIMIT.MIN) / EFFECT_LIMIT.PERCENT) + ')';
   } else if (effectFilter === 'effects__preview--sepia') {
     imgPreview.style.filter = 'sepia(' + value + '%)';
   }
@@ -360,11 +372,11 @@ var dragMouse = function () {
       startCoords = {
         x: moveEvt.clientX
       };
-      if (effectPin.offsetLeft - shift.x >= 0 && effectPin.offsetLeft - shift.x <= 453) {
+      if (effectPin.offsetLeft - shift.x >= EFFECT_LINE.MIN_LENGTH && effectPin.offsetLeft - shift.x <= EFFECT_LINE.MAX_LENGTH) {
         effectPin.style.left = (effectPin.offsetLeft - shift.x) + 'px';
         effectDepth.style.width = (effectDepth.offsetWidth - shift.x) + 'px';
-        effectDepth.style.fill = '#ffe753';
-        checkEffect(imgPreview.className, (effectDepth.offsetWidth - shift.x) * 100 / 453);
+        effectDepth.style.fill = EFFECT_LINE.COLOR;
+        checkEffect(imgPreview.className, (effectDepth.offsetWidth - shift.x) * PERCENT / EFFECT_LINE.MAX_LENGTH);
       }
     };
     var onMouseUp = function (upEvt) {
