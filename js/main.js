@@ -208,7 +208,7 @@ var closeModal = function () {
   });
 };
 var onModalEscPress = function (evt, element) {
-  if ((evt.target.className === 'text__hashtags' || evt.target.className === 'text__description') ? 1 : 0) {
+  if (evt.target.className === 'text__hashtags' || evt.target.className === 'text__description') {
     evt.stopPropagation();
   } else if (evt.key === ESC_KEY) {
     closeModal();
@@ -290,8 +290,9 @@ var removeAllFilter = function () {
 };
 var checkForm = function () {
   document.querySelector('#upload-submit').addEventListener('click', function () {
-    var hashtags = textHashtags.value.trim().split(' ');
+    var hashtags = textHashtags.value.trim().split(/[' ']+/);
     hashtags = getLowerLetter(hashtags);
+    textHashtags.value = hashtags.join(' ');
     var num = checkOneHaskTag(hashtags);
     if ((hashtags[0] !== '') && (num !== MESSAGE.NONE)) {
       textHashtags.setCustomValidity(hashtagMessages[num]);
