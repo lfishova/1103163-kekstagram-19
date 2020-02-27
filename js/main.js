@@ -57,6 +57,7 @@ var textHashtags = document.querySelector('.text__hashtags');
 var effectLine = document.querySelector('.effect-level__line');
 var effectPin = document.querySelector('.effect-level__pin');
 var effectDepth = document.querySelector('.effect-level__depth');
+var domPictures = document.querySelectorAll('.picture');
 
 var getCommentaries = function () {
   var randomComments = getRandomInt(COMMENT.MIN, COMMENT.MAX);
@@ -152,6 +153,11 @@ var onBigPictureClick = function () {
     bigPicture.classList.add('hidden');
   });
 };
+var onBigPictureKeydownEnter = function () {
+  document.addEventListener('keydown', function (evt) {
+    onModalEscPress(evt, bigPicture);
+  });
+};
 var getCommentElement = function (comment) {
   var fragment = document.createElement('li');
   fragment.className = 'social__comment';
@@ -200,8 +206,10 @@ var onEditFormClick = function () {
 var closeModal = function () {
   document.querySelector('.img-upload__overlay').classList.add('hidden');
   document.querySelector('body').classList.remove('modal-open');
+  bigPicture.classList.add('hidden');
   document.removeEventListener('keydown', function (evt) {
     onModalEscPress(evt, uploadFile);
+    onModalEscPress(evt, bigPicture);
     removeAllFilter();
     startFilter();
     imgPreview.style.filter = 'none';
@@ -389,7 +397,41 @@ var dragMouse = function () {
     window.addEventListener('mouseup', onMouseUp);
   });
 };
+var onRandomPicture = function (evt) {
+  if (evt.target && evt.target.matches('img.picture__img')) {
+    renderOnePicture(getPictures(COUNT_PICTURES)[getIndexRandomPicture(evt.target.attributes['src'].value)]);
+    showBigPicture();
+  } else if (evt.target && evt.target.matches('a.picture')) {
+    renderOnePicture(getPictures(COUNT_PICTURES)[getIndexRandomPicture(evt.target.firstElementChild.attributes['src'].value)]);
+    showBigPicture();
+  }
+};
+var getIndexRandomPicture = function (str) {
+  return parseInt(str.match(/[0-9]+/), 10) - 1;
+};
+var onRandomPictureClick = function () {
+  document.addEventListener('click', function (evt) {
+    onRandomPicture(evt);
+  });
+};
+var onRandomPictureEnterKeydown = function () {
+  document.addEventListener('keydown', function (evt) {
+    var evtCheck = evt;
+    if (evtCheck.key === 'Enter') {
+      onRandomPicture(evtCheck);
+    }
+  });
+};
+var addTabIndexPictures = function (pictures) {
+  for (var i = 0; i < pictures.length; i++) {
+    pictures[i].tabIndex = 0;
+  }
+};
 
+onBigPictureKeydownEnter();
+onRandomPictureEnterKeydown();
+addTabIndexPictures(domPictures);
+onRandomPictureClick();
 onBigPictureClick();
 checkForm();
 renderPictures(COUNT_PICTURES);
