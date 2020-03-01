@@ -148,12 +148,10 @@ var renderCommentsOnePicture = function (arr) {
 var showBigPicture = function () {
   bigPicture.classList.remove('hidden');
 };
-var onBigPictureClick = function () {
+var closeBigPicture = function () {
   pictureCancel.addEventListener('click', function () {
     bigPicture.classList.add('hidden');
   });
-};
-var onBigPictureKeydownEnter = function () {
   document.addEventListener('keydown', function (evt) {
     onModalEscPress(evt, bigPicture);
   });
@@ -397,11 +395,14 @@ var dragMouse = function () {
     window.addEventListener('mouseup', onMouseUp);
   });
 };
-var onRandomPicture = function (evt) {
+var onRandomPictureClick = function (evt) {
   if (evt.target && evt.target.matches('img.picture__img')) {
     renderOnePicture(getPictures(COUNT_PICTURES)[getIndexRandomPicture(evt.target.attributes['src'].value)]);
     showBigPicture();
-  } else if (evt.target && evt.target.matches('a.picture')) {
+  }
+};
+var onRandomPictureEnterPress = function (evt) {
+  if (evt.target && evt.target.matches('a.picture')) {
     renderOnePicture(getPictures(COUNT_PICTURES)[getIndexRandomPicture(evt.target.firstElementChild.attributes['src'].value)]);
     showBigPicture();
   }
@@ -409,16 +410,14 @@ var onRandomPicture = function (evt) {
 var getIndexRandomPicture = function (str) {
   return parseInt(str.match(/[0-9]+/), 10) - 1;
 };
-var onRandomPictureClick = function () {
+var openRandomPicture = function () {
   document.addEventListener('click', function (evt) {
-    onRandomPicture(evt);
+    onRandomPictureClick(evt);
   });
-};
-var onRandomPictureEnterKeydown = function () {
   document.addEventListener('keydown', function (evt) {
     var evtCheck = evt;
     if (evtCheck.key === 'Enter') {
-      onRandomPicture(evtCheck);
+      onRandomPictureEnterPress(evtCheck);
     }
   });
 };
@@ -428,11 +427,9 @@ var addTabIndexPictures = function (pictures) {
   }
 };
 
-onBigPictureKeydownEnter();
-onRandomPictureEnterKeydown();
+closeBigPicture();
 addTabIndexPictures(domPictures);
-onRandomPictureClick();
-onBigPictureClick();
+openRandomPicture();
 checkForm();
 renderPictures(COUNT_PICTURES);
 renderOnePicture(getPictures(COUNT_PICTURES)[0]);
