@@ -27,13 +27,14 @@
     ONLY_HASGTAG: 3,
     DOUBLE_HASHTAG: 4
   };
-  const REGULAR = /^#[a-zA-Z0-9]+$/;
+  const ONLY_LETTERS_AND_NUMBERS = /^#[a-zA-Z0-9]+$/;
   const PERCENT = 100;
   const STEP = 25;
   var hashtagMessages = ['Хештег начинается с символа #', 'Количество тегов не должно превышать 5', 'максимальная длина одного хэш-тега 20 символов, включая решётку', 'хеш-тег не может состоять только из одной решётки', 'один и тот же хэш-тег не может быть использован дважды', 'строка после решётки должна состоять из букв и чисел'];
   var imgPreview = document.querySelector('.img-upload__preview').querySelector('img');
   var effect = document.querySelector('.effects');
   var effectLine = document.querySelector('.effect-level__line');
+  var effectLevel = document.querySelector('.effect-level')
   var effectPin = document.querySelector('.effect-level__pin');
   var effectDepth = document.querySelector('.effect-level__depth');
   var textHashtags = document.querySelector('.text__hashtags');
@@ -105,10 +106,10 @@
       };
       var onMouseUp = function (upEvt) {
         upEvt.preventDefault();
-        document.removeEventListener('mousemove', onMouseMove);
+        effectLevel.removeEventListener('mousemove', onMouseMove);
         window.removeEventListener('mouseup', onMouseUp);
       };
-      document.addEventListener('mousemove', onMouseMove);
+      effectLevel.addEventListener('mousemove', onMouseMove);
       window.addEventListener('mouseup', onMouseUp);
     });
   };
@@ -182,7 +183,7 @@
         } else if (str === '#') {
           num = MESSAGE.ONLY_HASGTAG;
           break;
-        } else if (!REGULAR.test(str)) {
+        } else if (!ONLY_LETTERS_AND_NUMBERS.test(str)) {
           num = 5;
           break;
         } else {
