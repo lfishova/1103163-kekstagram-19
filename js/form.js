@@ -34,7 +34,7 @@
   var imgPreview = document.querySelector('.img-upload__preview').querySelector('img');
   var effect = document.querySelector('.effects');
   var effectLine = document.querySelector('.effect-level__line');
-  var effectLevel = document.querySelector('.effect-level')
+  var effectLevel = document.querySelector('.effect-level');
   var effectPin = document.querySelector('.effect-level__pin');
   var effectDepth = document.querySelector('.effect-level__depth');
   var textHashtags = document.querySelector('.text__hashtags');
