@@ -42,7 +42,7 @@
     uploadFile.addEventListener('change', function () {
       document.querySelector('.img-upload__overlay').classList.remove('hidden');
       window.form.setScaleValue(START_SCALE);
-      window.form.dragMouse();
+      window.slider.dragMouse();
     });
     document.addEventListener('keydown', function (evt) {
       onModalEscPress(evt, uploadFile);
