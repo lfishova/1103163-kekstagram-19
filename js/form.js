@@ -6,11 +6,6 @@
     MAX: 3,
     PERCENT: 100
   };
-  const EFFECT_LINE = {
-    MIN_LENGTH: 0,
-    MAX_LENGTH: 453,
-    COLOR: '#ffe753'
-  };
   const SCALE = {
     MAX_SCALE: 100,
     MIN_SCALE: 25
@@ -27,44 +22,40 @@
     ONLY_HASGTAG: 3,
     DOUBLE_HASHTAG: 4
   };
-  const REGULAR = /^#[a-zA-Z0-9]+$/;
-  const PERCENT = 100;
+  const ONLY_LETTERS_AND_NUMBERS = /^#[a-zA-Z0-9]+$/;
   const STEP = 25;
   var hashtagMessages = ['Хештег начинается с символа #', 'Количество тегов не должно превышать 5', 'максимальная длина одного хэш-тега 20 символов, включая решётку', 'хеш-тег не может состоять только из одной решётки', 'один и тот же хэш-тег не может быть использован дважды', 'строка после решётки должна состоять из букв и чисел'];
-  var imgPreview = document.querySelector('.img-upload__preview').querySelector('img');
   var effect = document.querySelector('.effects');
   var effectLine = document.querySelector('.effect-level__line');
-  var effectPin = document.querySelector('.effect-level__pin');
-  var effectDepth = document.querySelector('.effect-level__depth');
   var textHashtags = document.querySelector('.text__hashtags');
   var scale = document.querySelector('.scale');
   var checkEffect = function (effectFilter, value) {
     document.querySelector('.effect-level__value').value = Math.floor(value);
     if (effectFilter === 'effects__preview--chrome') {
-      imgPreview.style.filter = 'grayscale(' + value + '%)';
+      window.varData.imgPreview.style.filter = 'grayscale(' + value + '%)';
     } else if (effectFilter === 'effects__preview--marvin') {
-      imgPreview.style.filter = 'invert(' + value + '%)';
+      window.varData.imgPreview.style.filter = 'invert(' + value + '%)';
     } else if (effectFilter === 'effects__preview--phobos') {
-      imgPreview.style.filter = 'blur(' + (EFFECT_LIMIT.MIN + value * (EFFECT_LIMIT.MAX - EFFECT_LIMIT.MIN) / EFFECT_LIMIT.PERCENT) + 'px)';
+      window.varData.imgPreview.style.filter = 'blur(' + (EFFECT_LIMIT.MIN + value * (EFFECT_LIMIT.MAX - EFFECT_LIMIT.MIN) / EFFECT_LIMIT.PERCENT) + 'px)';
     } else if (effectFilter === 'effects__preview--heat') {
-      imgPreview.style.filter = 'brightness(' + (EFFECT_LIMIT.MIN + value * (EFFECT_LIMIT.MAX - EFFECT_LIMIT.MIN) / EFFECT_LIMIT.PERCENT) + ')';
+      window.varData.imgPreview.style.filter = 'brightness(' + (EFFECT_LIMIT.MIN + value * (EFFECT_LIMIT.MAX - EFFECT_LIMIT.MIN) / EFFECT_LIMIT.PERCENT) + ')';
     } else if (effectFilter === 'effects__preview--sepia') {
-      imgPreview.style.filter = 'sepia(' + value + '%)';
+      window.varData.imgPreview.style.filter = 'sepia(' + value + '%)';
     }
   };
   var onFilterChange = function (evt) {
-    imgPreview.classList.remove(imgPreview.classList.value);
-    imgPreview.style.filter = 'none';
+    window.varData.imgPreview.classList.remove(window.varData.imgPreview.classList.value);
+    window.varData.imgPreview.style.filter = 'none';
     if (evt.target && evt.target.matches('input[type="radio"]')) {
       var filter = 'effects__preview--' + evt.target.value;
-      imgPreview.classList.add(filter);
+      window.varData.imgPreview.classList.add(filter);
       if (evt.target.value !== 'none') {
         document.querySelector('.effect-level').classList.remove('hidden');
         var value = 100;
         checkEffect(filter, value);
-        effectPin.style.left = EFFECT_LINE.MAX_LENGTH + 'px';
-        effectDepth.style.width = effectLine.clientWidth + 'px';
-        effectDepth.style.fill = EFFECT_LINE.COLOR;
+        window.varData.effectPin.style.left = window.constData.EFFECT_LINE.MAX_LENGTH + 'px';
+        window.varData.effectDepth.style.width = effectLine.clientWidth + 'px';
+        window.varData.effectDepth.style.fill = window.constData.EFFECT_LINE.COLOR;
       } else {
         document.querySelector('.effect-level').classList.add('hidden');
       }
@@ -76,41 +67,11 @@
     });
   };
   var startFilter = function () {
-    imgPreview.classList.add('.effects__preview--none');
+    window.varData.imgPreview.classList.add('.effects__preview--none');
     document.querySelector('.effect-level').classList.add('hidden');
   };
   var removeAllFilter = function () {
-    imgPreview.classList.remove(imgPreview.classList.value);
-  };
-  var dragMouse = function () {
-    effectPin.addEventListener('mousedown', function (evt) {
-      evt.preventDefault();
-      var startCoords = {
-        x: evt.clientX
-      };
-      var onMouseMove = function (moveEvt) {
-        moveEvt.preventDefault();
-        var shift = {
-          x: startCoords.x - moveEvt.clientX
-        };
-        startCoords = {
-          x: moveEvt.clientX
-        };
-        if (effectPin.offsetLeft - shift.x >= EFFECT_LINE.MIN_LENGTH && effectPin.offsetLeft - shift.x <= EFFECT_LINE.MAX_LENGTH) {
-          effectPin.style.left = (effectPin.offsetLeft - shift.x) + 'px';
-          effectDepth.style.width = (effectDepth.offsetWidth - shift.x) + 'px';
-          effectDepth.style.fill = EFFECT_LINE.COLOR;
-          checkEffect(imgPreview.className, (effectDepth.offsetWidth - shift.x) * PERCENT / EFFECT_LINE.MAX_LENGTH);
-        }
-      };
-      var onMouseUp = function (upEvt) {
-        upEvt.preventDefault();
-        document.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('mouseup', onMouseUp);
-      };
-      document.addEventListener('mousemove', onMouseMove);
-      window.addEventListener('mouseup', onMouseUp);
-    });
+    window.varData.imgPreview.classList.remove(window.varData.imgPreview.classList.value);
   };
   var clearValue = function (element) {
     element.value = '';
@@ -182,7 +143,7 @@
         } else if (str === '#') {
           num = MESSAGE.ONLY_HASGTAG;
           break;
-        } else if (!REGULAR.test(str)) {
+        } else if (!ONLY_LETTERS_AND_NUMBERS.test(str)) {
           num = 5;
           break;
         } else {
@@ -216,7 +177,7 @@
   stepScaleDown();
   checkForm();
   window.form = {
-    dragMouse: dragMouse,
+    checkEffect: checkEffect,
     startFilter: startFilter,
     removeAllFilter: removeAllFilter,
     clearValue: clearValue,
