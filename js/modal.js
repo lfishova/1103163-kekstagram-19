@@ -9,6 +9,7 @@
   var closeBigPicture = function () {
     pictureCancel.addEventListener('click', function () {
       window.picture.bigPicture.classList.add('hidden');
+      document.querySelector('body').classList.remove('modal-open');
     });
     document.addEventListener('keydown', function (evt) {
       onModalEscPress(evt, window.picture.bigPicture);
