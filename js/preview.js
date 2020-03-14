@@ -5,18 +5,18 @@
   var onRandomPictureClick = function (evt) {
     if (evt.target && evt.target.matches('img.picture__img')) {
       var indexRandomPicture = getIndexRandomPicture(evt.target.attributes['src'].value);
-      window.picture.renderOnePicture(window.data.getPictureTemplate(indexRandomPicture));
+      window.picture.renderOnePicture(window.loadData.loadPictures[indexRandomPicture]);
       showBigPicture();
     }
   };
   var onRandomPictureEnterPress = function (evt) {
     if (evt.target && evt.target.matches('a.picture')) {
-      window.picture.renderOnePicture(window.data.getPictureTemplate(getIndexRandomPicture(evt.target.firstElementChild.attributes['src'].value)));
+      window.picture.renderOnePicture(window.loadData.loadPictures[getIndexRandomPicture(evt.target.firstElementChild.attributes['src'].value)]);
       showBigPicture();
     }
   };
   var getIndexRandomPicture = function (str) {
-    return parseInt(str.match(/[0-9]+/), 10);
+    return parseInt(str.match(/[0-9]+/), 10) - 1;
   };
   var openRandomPicture = function () {
     document.addEventListener('click', function (evt) {
@@ -39,5 +39,5 @@
   };
   addTabIndexPictures(domPictures);
   openRandomPicture();
-  showBigPicture();
+  // showBigPicture();
 })();

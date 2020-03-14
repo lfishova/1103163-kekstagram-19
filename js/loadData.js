@@ -1,22 +1,28 @@
 'use strict';
 
 (function () {
+  const URL = 'https://js.dump.academy/kekstagram/data';
+  var loadPictures = [];
+  var onSuccess = function (data) {
+    data.forEach(function (it) {
+      loadPictures.push(it);
+    });
+    window.gallery.renderPictures(loadPictures);
+  };
   var load = function () {
-    const URL = 'https://js.dump.academy/kekstagram/data';
-    var loadPictures = [];
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.addEventListener('load', function () {
       if (xhr.status === 200) {
-        loadPictures = xhr.response;
+        onSuccess(xhr.response);
       }
     });
     xhr.timeout = 1000; // 10s
     xhr.open('GET', URL);
     xhr.send();
-    return loadPictures;
   };
+  load();
   window.loadData = {
-    load: load
+    loadPictures: loadPictures
   };
 })();
