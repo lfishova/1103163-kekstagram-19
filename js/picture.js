@@ -12,6 +12,7 @@
     renderCommentsOnePicture(picture.comments);
   };
   var renderCommentsOnePicture = function (arr) {
+    removeAllComments();
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < arr.length; i++) {
       fragment.appendChild(getCommentElement(arr[i]));
@@ -45,7 +46,11 @@
     document.querySelector('.comments-loader').classList.add('hidden');
     document.querySelector('body').classList.add('modal-open');
   };
-  renderOnePicture(window.data.getPictures(window.data.COUNT_PICTURES)[0]);
+  var removeAllComments = function () {
+    while (blockComments.firstChild) {
+      blockComments.removeChild(blockComments.firstChild);
+    }
+  };
   addClass();
   window.picture = {
     bigPicture: bigPicture,
