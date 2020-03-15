@@ -38,7 +38,6 @@
     window.picture.bigPicture.classList.remove('hidden');
   };
   addTabIndexPictures(domPictures);
-  openRandomPicture();
   window.preview = {
     openRandomPicture: openRandomPicture
   };
