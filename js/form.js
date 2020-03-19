@@ -29,6 +29,7 @@
   var effectLine = document.querySelector('.effect-level__line');
   var textHashtags = document.querySelector('.text__hashtags');
   var scale = document.querySelector('.scale');
+  var form = document.querySelector('.img-upload__form');
   var checkEffect = function (effectFilter, value) {
     document.querySelector('.effect-level__value').value = Math.floor(value);
     if (effectFilter === 'effects__preview--chrome') {
@@ -170,7 +171,50 @@
     }
     return result;
   };
+  var sendData = function () {
+    form.addEventListener('submit', function (evt) {
+      window.backend.upload(new FormData(form), function () {
+        document.querySelector('.img-upload__overlay').classList.add('hidden');
+        clearValue(window.modal.uploadFile);
+        window.form.removeAllFilter();
+        window.form.startFilter();
+        window.varData.imgPreview.style.filter = 'none';
+        var successMessage = document.querySelector('main').appendChild(document.querySelector('#success').content.querySelector('.success').cloneNode(true));
+        successMessage.querySelector('.success__button').addEventListener('click', function () {
+          document.querySelector('main').removeChild(document.querySelector('.success'));
+        });
+        document.addEventListener('keydown', function (evtESC) {
+          if (evtESC.key === window.modal.ESC_KEY) {
+            document.querySelector('main').removeChild(document.querySelector('.success'));
+          }
+        });
+        document.addEventListener('click', function (evtClick) {
+          if (evtClick.target && evtClick.target.matches('.success')) {
+            document.querySelector('main').removeChild(document.querySelector('.success'));
+          }
+        });
+      }, function () {
+        document.querySelector('.img-upload__overlay').classList.add('hidden');
+        var successMessage = document.querySelector('main').appendChild(document.querySelector('#error').content.querySelector('.error').cloneNode(true));
+        successMessage.querySelector('.error__button').addEventListener('click', function () {
+          document.querySelector('main').removeChild(document.querySelector('.error'));
+        });
+        document.addEventListener('keydown', function (evtESC) {
+          if (evtESC.key === window.modal.ESC_KEY) {
+            document.querySelector('main').removeChild(document.querySelector('.error'));
+          }
+        });
+        document.addEventListener('click', function (evtClick) {
+          if (evtClick.target && evtClick.target.matches('.error')) {
+            document.querySelector('main').removeChild(document.querySelector('.error'));
+          }
+        });
+      });
+      evt.preventDefault();
+    });
+  };
 
+  sendData();
   checkFilter();
   startFilter();
   stepScaleUp();

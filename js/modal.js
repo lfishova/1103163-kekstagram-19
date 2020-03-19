@@ -59,4 +59,8 @@
   closeBigPicture();
   onEditFormChange();
   onEditFormClick();
+  window.modal = {
+    ESC_KEY: ESC_KEY,
+    uploadFile: uploadFile
+  };
 })();
