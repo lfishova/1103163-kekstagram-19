@@ -173,7 +173,7 @@
   };
   var sendData = function () {
     form.addEventListener('submit', function (evt) {
-      window.uploadData.upload(new FormData(form), function () {
+      window.backend.upload(new FormData(form), function () {
         document.querySelector('.img-upload__overlay').classList.add('hidden');
         clearValue(window.modal.uploadFile);
         window.form.removeAllFilter();
