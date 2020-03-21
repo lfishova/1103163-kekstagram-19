@@ -1,7 +1,7 @@
 'use strict';
 
 (function () {
-  var blockPictures = window.document.querySelector('.pictures');
+  var blockPictures = document.querySelector('.pictures');
   var renderPictures = function (pictures) {
     var fragment = document.createDocumentFragment();
     for (var i = 0; i < pictures.length; i++) {
@@ -10,6 +10,7 @@
     blockPictures.appendChild(fragment);
   };
   window.gallery = {
+    blockPictures: blockPictures,
     renderPictures: renderPictures
   };
 })();
