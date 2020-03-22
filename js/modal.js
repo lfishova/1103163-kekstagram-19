@@ -1,8 +1,8 @@
 'use strict';
 
 (function () {
-  const START_SCALE = 100;
-  const ESC_KEY = 'Escape';
+  var START_SCALE = 100;
+  var ESC_KEY = 'Escape';
   var pictureCancel = document.querySelector('#picture-cancel');
   var uploadFile = document.querySelector('#upload-file');
   var uploadCancel = document.querySelector('#upload-cancel');

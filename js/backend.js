@@ -5,7 +5,11 @@
     POST: 'https://js.dump.academy/kekstagram',
     GET: 'https://js.dump.academy/kekstagram/data'
   };
+  var loadPictures = [];
   var onSuccess = function (data) {
+    data.forEach(function (it) {
+      loadPictures.push(it);
+    });
     window.gallery.renderPictures(data);
     window.preview.openRandomPicture(data);
   };
@@ -37,6 +41,7 @@
   };
   load();
   window.backend = {
+    loadPictures: loadPictures,
     upload: upload
   };
 })();
