@@ -1,20 +1,20 @@
 'use strict';
 
 (function () {
-  const EFFECT_LIMIT = {
+  var EFFECT_LIMIT = {
     MIN: 1,
     MAX: 3,
     PERCENT: 100
   };
-  const SCALE = {
+  var SCALE = {
     MAX_SCALE: 100,
     MIN_SCALE: 25
   };
-  const HASHTAG = {
+  var HASHTAG = {
     MAX_LENGTH: 20,
     MAX_COUNT: 5
   };
-  const MESSAGE = {
+  var MESSAGE = {
     NONE: -1,
     BEGIN_HASHTAG: 0,
     TOO_MORE_COUNT: 1,
@@ -22,8 +22,8 @@
     ONLY_HASGTAG: 3,
     DOUBLE_HASHTAG: 4
   };
-  const ONLY_LETTERS_AND_NUMBERS = /^#[a-zA-Z0-9]+$/;
-  const STEP = 25;
+  var ONLY_LETTERS_AND_NUMBERS = /^#[a-zA-Z0-9]+$/;
+  var STEP = 25;
   var hashtagMessages = ['Хештег начинается с символа #', 'Количество тегов не должно превышать 5', 'максимальная длина одного хэш-тега 20 символов, включая решётку', 'хеш-тег не может состоять только из одной решётки', 'один и тот же хэш-тег не может быть использован дважды', 'строка после решётки должна состоять из букв и чисел'];
   var effect = document.querySelector('.effects');
   var effectLine = document.querySelector('.effect-level__line');
